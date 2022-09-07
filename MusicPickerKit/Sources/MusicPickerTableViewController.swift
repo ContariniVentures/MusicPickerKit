@@ -97,14 +97,18 @@ class MusicPickerTableViewController: UITableViewController {
             trim(musicTrack: musicItems[indexPath.row].trimInformation)
         } else {
             let importAction: (() -> Void)
+            var analytics = MusicPickerAnalyticsType.importMusic
             if indexPath.row == 0 {
                 importAction = importMusic
+                analytics = MusicPickerAnalyticsType.importMusic
             } else {
                 importAction = importFromPhotos
+                analytics = MusicPickerAnalyticsType.importFromPhotos
             }
             if(musicPickerDelegate?.musicPickerViewControllerHasPremiumAccess(container) == true){
                 importAction()
             } else {
+                self.musicPickerDelegate?.musicPickerViewController(container, triggerAnalitics: analytics)
                 self.musicPickerDelegate?.musicPickerViewController(container, grantPremiumAccess: { (success) in
                     if success {
                         importAction()
